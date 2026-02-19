@@ -33,6 +33,27 @@ export class ApiGatewayClient {
 		return (await res.json()) as T;
 	}
 
+	public async put<T>(path: string, body: unknown): Promise<T> {
+		const res = await fetch(`${this.basesUrl}${path}`, {
+			method: "PUT",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(body)
+		});
+		if (!res.ok) throw await this.toApiError(res);
+		if (res.status === 204) return undefined as T;
+
+		const contentType = res.headers.get("content-type") ?? "";
+		if (!contentType.includes("application/json")) return undefined as T;
+
+		const text = await res.text();
+		if (!text) return undefined as T;
+
+		return JSON.parse(text) as T;
+	}
+
 	private async toApiError(res: Response): Promise<ApiRequestError> {
 		let message = `Request failed (${res.status})`;
 

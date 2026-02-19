@@ -9,72 +9,58 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SaucesRouteImport } from './routes/sauces'
-import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SaucesIndexRouteImport } from './routes/sauces/index'
+import { Route as ProductsIndexRouteImport } from './routes/products/index'
 
-const SaucesRoute = SaucesRouteImport.update({
-  id: '/sauces',
-  path: '/sauces',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProductsRoute = ProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SaucesIndexRoute = SaucesIndexRouteImport.update({
+  id: '/sauces/',
+  path: '/sauces/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsIndexRoute = ProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/products': typeof ProductsRoute
-  '/sauces': typeof SaucesRoute
+  '/products/': typeof ProductsIndexRoute
+  '/sauces/': typeof SaucesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/products': typeof ProductsRoute
-  '/sauces': typeof SaucesRoute
+  '/products': typeof ProductsIndexRoute
+  '/sauces': typeof SaucesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/products': typeof ProductsRoute
-  '/sauces': typeof SaucesRoute
+  '/products/': typeof ProductsIndexRoute
+  '/sauces/': typeof SaucesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/products' | '/sauces'
+  fullPaths: '/' | '/products/' | '/sauces/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/products' | '/sauces'
-  id: '__root__' | '/' | '/products' | '/sauces'
+  id: '__root__' | '/' | '/products/' | '/sauces/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ProductsRoute: typeof ProductsRoute
-  SaucesRoute: typeof SaucesRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
+  SaucesIndexRoute: typeof SaucesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sauces': {
-      id: '/sauces'
-      path: '/sauces'
-      fullPath: '/sauces'
-      preLoaderRoute: typeof SaucesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/products': {
-      id: '/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof ProductsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -82,20 +68,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sauces/': {
+      id: '/sauces/'
+      path: '/sauces'
+      fullPath: '/sauces/'
+      preLoaderRoute: typeof SaucesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/': {
+      id: '/products/'
+      path: '/products'
+      fullPath: '/products/'
+      preLoaderRoute: typeof ProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ProductsRoute: ProductsRoute,
-  SaucesRoute: SaucesRoute,
+  ProductsIndexRoute: ProductsIndexRoute,
+  SaucesIndexRoute: SaucesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true

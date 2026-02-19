@@ -33,7 +33,7 @@ export function CreateProductForm({onSubmit, isPending, errorMessage}: Props) {
 	const [price, setPrice] = useState("");
 	const [snackType, setSnackType] = useState<SnackType>("Snack");
 
-	async function handleSubmit(e: React.FormEvent) {
+	async function handleSubmit(e: React.ChangeEvent) {
 		e.preventDefault();
 
 		const payload = {
